@@ -1,0 +1,219 @@
+<!doctype html>
+<html ng-app="HomeModule">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="scripts/angular.js"></script>
+		<script src="scripts/HomeReportScript.js"></script>
+		<script src="scripts/LinkPerformanceReportScript.js"></script>
+		<script src="scripts/OpensReportScript.js"></script>
+		<script src="scripts/ListEffectivenessReportScript.js"></script>
+		<script src="scripts/DeviceUsageReportScript.js"></script>
+		<script src="scripts/angular-material.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="MilesHomeView.css"/>
+		<title>Miles Email Miner</title>
+		<div ng-controller="myHomeController">
+			<img ng-src="{{ logo }}" alt="Miles Marketing Destinations"/>
+		</div>
+		<h1 ng-controller="myHomeController"> {{ welcome_message }} </h1>
+		<h2>Please choose a type of report</h2>
+	</head>
+
+	<body>
+
+		<div>
+			<select id="reportSelection" onchange="chooseReport()">
+				<option value="None">None <option value="Link Performance">Link Performance <option value="Opens">Opens <option value="List Effectiveness">List Effectiveness <option value="Device Usage">Device Usage
+			</select>
+		</div>
+		<p></p>
+		<div id="UpdateReportInstruction"></div>
+		<p></p>
+		<div ng-controller="DateController as dateCtrl">
+			<!-- Behind the scenes, Angular creates models (i.e. ng-model="client_model") to pass the text input values as variables to the data mining algorithms-->
+			<label name="clientid" id="clientid" style="display: inline-block; width: 250px; height: 20px;" >Miles Client: </label>
+			<input type="text" ng-model="client_model" name="client_ta" id="client_ta" style="display: inline-block;"/>
+			<br>
+			<label name="emailcampaignid" id="emailcampaignid" style="display: inline-block; width: 250px; height: 20px;" >Email Campaign: </label>
+			<input type="text" ng-model="email_campaign_model" name="emailcampaign_ta" id="emailcampaign_ta" style="display: inline-block;"/>
+			<br>
+			<label name="specificemailid" id="specificemailid" style="display: inline-block; width: 250px; height: 20px;" >Specific Email: </label>
+			<input type="text" ng-model="specific_email_model" name="specificemail_ta" id="specificemail_ta" style="display: inline-block"/>
+			<br>
+			<label name="rangeid" id="rangeid" style="display: inline-block; width: 250px; height: 20px;" >Range (Default): </label>
+			<input type="number" ng-model="range_from_model" style="color:#ccc; display: inline-block;" name="range_ta_from" id="range_ta_from" value="MM/DD/YEAR" onfocus="this.value = this.value=='MM/DD/YEAR' ? '' : this.value; this.style.color='#000';" onfocusout="this.value = this.value == '' ? this.value = 'MM/DD/YEAR' : this.value; this.value=='MM/DD/YEAR' ? this.style.color='#ccc' : this.style.color='#000'"/>
+			<label name="toid" id="toid" style="display: inline-block;" >to</label>
+			<input type="text" ng-model="range_to_model" style="color:#ccc; display: inline-block;" name="range_ta_to" id="range_ta_to" value="MM/DD/YEAR" onfocus="this.value = this.value=='MM/DD/YEAR' ? '' : this.value; this.style.color='#000';" onfocusout="this.value = this.value == '' ? this.value = 'MM/DD/YEAR' : this.value; this.value=='MM/DD/YEAR' ? this.style.color='#ccc' : this.style.color='#000'"/>
+			<br>
+			<label name="singledayid" id="singledayid" style="display: inline-block; width: 250px; height: 20px;" >Single Day: </label>
+			<input type="text" ng-model="single_day_model" style="color:#ccc; display: inline-block;" name="singleday_ta" id="singleday_ta" value="MM/DD/YEAR" onfocus="this.value = this.value=='MM/DD/YEAR' ? '' : this.value; this.style.color='#000';" onfocusout="this.value = this.value == '' ? this.value = 'MM/DD/YEAR' : this.value; this.value=='MM/DD/YEAR' ? this.style.color='#ccc' : this.style.color='#000'"/>
+			<br>
+			<label name="oneweekid" id="oneweekid" style="display: inline-block; width: 250px; height: 20px;" >One Week Beginning On: </label>
+			<input type="text" ng-model="one_week_model" style="color:#ccc; display: inline-block;" name="oneweek_ta" id="oneweek_ta" value="MM/DD/YEAR" onfocus="this.value = this.value=='MM/DD/YEAR' ? '' : this.value; this.style.color='#000';" onfocusout="this.value = this.value == '' ? this.value = 'MM/DD/YEAR' : this.value; this.value=='MM/DD/YEAR' ? this.style.color='#ccc' : this.style.color='#000'"/>
+			<br>
+			<label name="onemonthid" id="onemonthid" style="display: inline-block; width: 250px; height: 20px;" >30 Days Beginning On: </label>
+			<input type="text" ng-model="one_month_model" style="color:#ccc; display: inline-block;" name="onemonth_ta" id="onemonth_ta" value="MM/DD/YEAR" onfocus="this.value = this.value=='MM/DD/YEAR' ? '' : this.value; this.style.color='#000';" onfocusout="this.value = this.value == '' ? this.value = 'MM/DD/YEAR' : this.value; this.value=='MM/DD/YEAR' ? this.style.color='#ccc' : this.style.color='#000'"/>
+			<br>
+		</div>
+
+		<script>
+			var int_array_for_chosen_report_type = [0, 0, 0, 0];
+
+			function chooseReport() {
+				var reporttype = document.getElementById("reportSelection").value;
+
+				switch(reporttype) {
+				case 'None':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please choose a report type to continue";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 0;
+					break;
+				case 'Link Performance':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 1;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 0;
+					generateLinkPerformanceParameters();
+					break;
+				case 'Opens':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 1;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 0;
+					generateOpensParameters();
+					break;
+				case 'List Effectiveness':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 1;
+					int_array_for_chosen_report_type[3] = 0;
+					generateListEffectivenessParameters();
+					break;
+				case 'Device Usage':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 1;
+					generateDeviceUsageParameters();
+					break;
+				} /*ends switch*/
+			}/*ends chooseReport()*/
+
+			function generateLinkPerformanceParameters() {
+				/* Make sure fields are visible*/
+				document.getElementById("clientid").style.display = "inline-block";
+				document.getElementById("client_ta").style.display = "inline-block";
+				document.getElementById("emailcampaignid").style.display = "inline-block";
+				document.getElementById("emailcampaign_ta").style.display = "inline-block";
+				document.getElementById("specificemailid").style.display = "inline-block";
+				document.getElementById("specificemail_ta").style.display = "inline-block";
+				document.getElementById("singledayid").style.display = "inline-block";
+				document.getElementById("singleday_ta").style.display = "inline-block";
+				document.getElementById("oneweekid").style.display = "inline-block";
+				document.getElementById("oneweek_ta").style.display = "inline-block";
+				document.getElementById("onemonthid").style.display = "inline-block";
+				document.getElementById("onemonth_ta").style.display = "inline-block";
+			}
+
+			function generateOpensParameters() {
+				/* Make sure fields are visible*/
+				document.getElementById("clientid").style.display = "inline-block";
+				document.getElementById("client_ta").style.display = "inline-block";
+				document.getElementById("emailcampaignid").style.display = "inline-block";
+				document.getElementById("emailcampaign_ta").style.display = "inline-block";
+				document.getElementById("specificemailid").style.display = "inline-block";
+				document.getElementById("specificemail_ta").style.display = "inline-block";
+				document.getElementById("singledayid").style.display = "inline-block";
+				document.getElementById("singleday_ta").style.display = "inline-block";
+				document.getElementById("oneweekid").style.display = "inline-block";
+				document.getElementById("oneweek_ta").style.display = "inline-block";
+				document.getElementById("onemonthid").style.display = "inline-block";
+				document.getElementById("onemonth_ta").style.display = "inline-block";
+			}
+
+			function generateListEffectivenessParameters() {
+				/* Make sure fields are visible*/
+				document.getElementById("clientid").style.display = "inline-block";
+				document.getElementById("client_ta").style.display = "inline-block";
+				document.getElementById("emailcampaignid").style.display = "inline-block";
+				document.getElementById("emailcampaign_ta").style.display = "inline-block";
+				document.getElementById("specificemailid").style.display = "inline-block";
+				document.getElementById("specificemail_ta").style.display = "inline-block";
+				document.getElementById("singledayid").style.display = "inline-block";
+				document.getElementById("singleday_ta").style.display = "inline-block";
+				document.getElementById("oneweekid").style.display = "inline-block";
+				document.getElementById("oneweek_ta").style.display = "inline-block";
+				document.getElementById("onemonthid").style.display = "inline-block";
+				document.getElementById("onemonth_ta").style.display = "inline-block";
+			}
+
+			function generateDeviceUsageParameters() {
+				/* Make sure fields are visible*/
+				document.getElementById("clientid").style.display = "none";
+				document.getElementById("client_ta").style.display = "none";
+				document.getElementById("emailcampaignid").style.display = "none";
+				document.getElementById("emailcampaign_ta").style.display = "none";
+				document.getElementById("specificemailid").style.display = "none";
+				document.getElementById("specificemail_ta").style.display = "none";
+				document.getElementById("singledayid").style.display = "none";
+				document.getElementById("singleday_ta").style.display = "none";
+				document.getElementById("oneweekid").style.display = "none";
+				document.getElementById("oneweek_ta").style.display = "none";
+				document.getElementById("onemonthid").style.display = "none";
+				document.getElementById("onemonth_ta").style.display = "none";
+			}
+
+			function generateReport() {
+
+				if (int_array_for_chosen_report_type[0] == 1 && int_array_for_chosen_report_type[1] == 0 && int_array_for_chosen_report_type[2] == 0 && int_array_for_chosen_report_type[3] == 0) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+	
+				} else if (int_array_for_chosen_report_type[0] == 0 && int_array_for_chosen_report_type[1] == 1 && int_array_for_chosen_report_type[2] == 0 && int_array_for_chosen_report_type[3] == 0) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+				} else if (int_array_for_chosen_report_type[0] == 0 && int_array_for_chosen_report_type[1] == 0 && int_array_for_chosen_report_type[2] == 1 && int_array_for_chosen_report_type[3] == 0) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+				} else if (int_array_for_chosen_report_type[0] == 0 && int_array_for_chosen_report_type[1] == 0 && int_array_for_chosen_report_type[2] == 0 && int_array_for_chosen_report_type[3] == 1) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+				} else {
+					document.getElementById("NoReportChosenOnRun").style.display = "inline-block";
+					document.getElementById("RunButtonClicked").style.display = "none";
+
+				}
+			}
+		</script>
+		<p></p>
+		<div>
+			<button onclick="generateReport()">
+				Run Report
+			</button>
+		</div>
+		<p></p>
+		<div id="RunButtonClicked" ng-controller="myHomeController" style="display: none;">
+			{{running_test_message}}
+			{{client_model}}
+		</div>
+		<p></p>
+		<div id="NoReportChosenOnRun" ng-controller="myHomeController" style="display: none; color: red">
+			{{ran_no_report_selected}}
+		</div>
+
+		<p></p>
+		<div>
+			Having report errors? Please contact the software maintenance team for this site <a href="mailto:mscholzjr@gmail.com?subject=Miles Email Miner Errors" style="color:#3399FF">here</a>
+		</div>
+		<p></p>
+	</body>
+
+</html>
