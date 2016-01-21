@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html ng-app="HomeModule">
+
+  <head>
+    <script data-require="angular.js@1.4.4" data-semver="1.4.4" src="https://code.angularjs.org/1.4.4/angular.js"></script>
+    <script src="https://jspm.io/system@0.16.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-aria.js"></script>
+    <script src="https://gitcdn.xyz/repo/angular/bower-material/v0.11.0/angular-material.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js"></script>
+    <script src="script.js"></script>
+
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/angular/bower-material/v0.11.0/angular-material.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+ 	<body>
+    <title>Miles Email Miner</title>
+    <div ng-controller="myHomeController">
+	      <img ng-src="{{ Miles_Logo }}" alt="Miles Marketing Destinations"/>
+		  <h2> {{ welcome_message }} </h2>
+		  <h3>Please choose a type of report</h3>
+    </div> 
+		<div>
+			<select id="reportSelection" style="display: inline-block; width: 190px;" onchange="chooseReport()">
+				<option value="None">None <option value="Link Performance">Link Performance <option value="Opens">Opens <option value="List Effectiveness">List Effectiveness <option value="Device Usage">Device Usage
+			</select>
+		</div>
+		<p></p>
+		<div id="UpdateReportInstruction"></div>
+		<p></p>
+		<div>
+      <!-- Behind the scenes, Angular creates models (i.e. ng-model="client_model") to pass the text input values as variables to the data mining algorithms-->
+      <!--What ng-model does is behind the scenes it’s going to add a property up in the memory called “client_model” into what’s called “the scope”.-->
+      <label style="display: inline-block; width: 200px; height: 20px;" id="clientid" name="clientid">Miles Client: </label>
+      <input type="text" style="display: inline-block;" id="client_ta" name="client_ta" ng-model="client_value" />
+     </div>
+     <div>
+      <label style="display: inline-block; width: 200px; height: 20px;" id="emailcampaignid" name="emailcampaignid">Email Campaign: </label>
+      <input type="text" style="display: inline-block;" id="emailcampaign_ta" name="emailcampaign_ta" ng-model="email_campaign_value" />
+     </div>
+     <div>
+      <label style="display: inline-block; width: 200px; height: 20px;" id="specificemailid" name="specificemailid">Specific Email: </label>
+      <input type="text" style="display: inline-block" id="specificemail_ta" name="specificemail_ta" ng-model="specific_email_value" />
+       </div>
+      <div>
+      <label style="display: inline-block; width: 200px; height: 20px;" id="rangeid" name="rangeid">Range (Default): </label>
+    
+        <select id="rangeSelection" style="display: inline-block; width: 190px;" onchange="chooseRange()">
+				<option value="None">None <option value="From To">From To<option value="Single Day">Single Day <option value="One Week">One Week <option value="One Month">One Month
+			</select>
+      
+      </div>
+       <div id="dp1and2_div" style='display: none;'>
+      <md-content ng-controller="AppCtrl" style='display: inline-block; width: 200px;' id="dp1">
+      <md-datepicker ng-model="startDate" md-placeholder="Enter date"></md-datepicker>
+      </md-content>
+      <md-content ng-controller="AppCtrl" style='display: inline-block; width: 200px;' id="dp2">
+      <md-datepicker ng-model="endDate" md-placeholder="Enter date"></md-datepicker>
+      </md-content>
+      </div>
+     
+     <!--  
+       <div id="single_day_div" style='display: none;' ng-controller="AppCtrl">
+      <label style="display: inline-block; width: 200px;" id="singledayid" name="singledayid">Single Day: </label>
+      <md-content ng-controller="AppCtrl" style='display: inline-block; width: 200px;' id="dp3" >
+      <md-datepicker ng-model="dt" md-placeholder="Enter date" ng-change="license.expirationdate = dt.toISOString()"></md-datepicker>
+      </md-content>
+        {{license.expirationdate}} 
+      </div>
+      -->
+      
+     <div id="single_day_div" style='display: none;' ng-controller="AppCtrl">
+       <label style="display: inline-block; width: 200px;" id="singledayid" name="singledayid">Single Day: </label>
+      <md-datepicker ng-model="dt" md-placeholder="Enter date" ng-change="license.expirationdate = dt.toISOString()">
+      </md-datepicker>
+      {{license.expirationdate}}
+    </div>
+
+      
+      
+      
+       <div id="one_week_div" style='display: none;' ng-controller="AppCtrl">
+      <label style="display: inline-block; width: 200px;" id="oneweekid" name="oneweekid">One Week Beginning On: </label>
+      <md-content style='display: inline-block; width: 200px;' id="dp4">
+      <md-datepicker ng-model="startDate" md-placeholder="Enter date"></md-datepicker>
+      </md-content>      
+      </div>
+      
+      <div id="one_month_div" style='display: none;' ng-controller="AppCtrl">
+      <label style="display: inline-block; width: 200px;" id="onemonthid" name="onemonthid">30 Days Beginning On: </label>
+      <md-content style='display: inline-block; width: 200px;' id="dp5">
+      <md-datepicker ng-model="startDate" md-placeholder="Enter date"></md-datepicker>
+      </md-content>      
+      </div>
+    
+    <script>
+			var int_array_for_chosen_report_type = [0, 0, 0, 0];
+			
+			function chooseReport() {                
+				var reporttype = document.getElementById("reportSelection").value;
+
+				switch(reporttype) {
+				case 'None':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please choose a report type to continue";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 0;
+					break;
+				case 'Link Performance':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 1;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 0;
+					generateLinkPerformanceParameters();
+					break;
+				case 'Opens':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 1;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 0;
+					generateOpensParameters();
+					break;
+				case 'List Effectiveness':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 1;
+					int_array_for_chosen_report_type[3] = 0;
+					generateListEffectivenessParameters();
+					break;
+				case 'Device Usage':
+					document.getElementById("UpdateReportInstruction").innerHTML = "Please select the parameters for the " + reporttype + " Report";
+					int_array_for_chosen_report_type[0] = 0;
+					int_array_for_chosen_report_type[1] = 0;
+					int_array_for_chosen_report_type[2] = 0;
+					int_array_for_chosen_report_type[3] = 1;
+					generateDeviceUsageParameters();
+					break;
+				} /*ends switch*/
+			}/*ends chooseReport()*/
+			
+		function chooseRange() {
+				var rangetype = document.getElementById("rangeSelection").value;
+
+				switch(rangetype) {
+				case 'None':
+          document.getElementById("dp1and2_div").style.display = "none";
+          document.getElementById("single_day_div").style.display = "none";
+          document.getElementById("one_week_div").style.display = "none";
+          document.getElementById("one_month_div").style.display = "none";
+					break;
+				case 'From To':
+	        document.getElementById("dp1and2_div").style.display = "inline-block";
+          document.getElementById("single_day_div").style.display = "none";
+          document.getElementById("one_week_div").style.display = "none";
+          document.getElementById("one_month_div").style.display = "none";
+					break;
+				case 'Single Day':
+				  document.getElementById("dp1and2_div").style.display = "none";
+          document.getElementById("single_day_div").style.display = "inline-block";
+          document.getElementById("one_week_div").style.display = "none";
+          document.getElementById("one_month_div").style.display = "none";
+					break;
+				case 'One Week':
+					document.getElementById("dp1and2_div").style.display = "none";
+          document.getElementById("single_day_div").style.display = "none";
+          document.getElementById("one_week_div").style.display = "inline-block";
+          document.getElementById("one_month_div").style.display = "none";
+					break;
+				case 'One Month':
+				  document.getElementById("dp1and2_div").style.display = "none";
+          document.getElementById("single_day_div").style.display = "none";
+          document.getElementById("one_week_div").style.display = "none";
+          document.getElementById("one_month_div").style.display = "inline-block";
+					break;
+				} /*ends switch*/
+			}/*ends chooseRange()*/
+
+
+
+			function generateLinkPerformanceParameters() {
+				/* Make sure fields are visible*/
+				document.getElementById("clientid").style.display = "inline-block";
+				document.getElementById("client_ta").style.display = "inline-block";
+				document.getElementById("emailcampaignid").style.display = "inline-block";
+				document.getElementById("emailcampaign_ta").style.display = "inline-block";
+				document.getElementById("specificemailid").style.display = "inline-block";
+				document.getElementById("specificemail_ta").style.display = "inline-block";
+	
+			}
+
+			function generateOpensParameters() {
+				/* Make sure fields are visible*/
+	    	document.getElementById("clientid").style.display = "inline-block";
+				document.getElementById("client_ta").style.display = "inline-block";
+				document.getElementById("emailcampaignid").style.display = "inline-block";
+				document.getElementById("emailcampaign_ta").style.display = "inline-block";
+				document.getElementById("specificemailid").style.display = "inline-block";
+				document.getElementById("specificemail_ta").style.display = "inline-block";
+			}
+
+			function generateListEffectivenessParameters() {
+				/* Make sure fields are visible*/
+		    document.getElementById("clientid").style.display = "inline-block";
+				document.getElementById("client_ta").style.display = "inline-block";
+				document.getElementById("emailcampaignid").style.display = "inline-block";
+				document.getElementById("emailcampaign_ta").style.display = "inline-block";
+				document.getElementById("specificemailid").style.display = "inline-block";
+				document.getElementById("specificemail_ta").style.display = "inline-block";
+			}
+
+			function generateDeviceUsageParameters() {
+				/* Make sure fields are visible*/
+				document.getElementById("clientid").style.display = "none";
+				document.getElementById("client_ta").style.display = "none";
+				document.getElementById("emailcampaignid").style.display = "none";
+				document.getElementById("emailcampaign_ta").style.display = "none";
+				document.getElementById("specificemailid").style.display = "none";
+				document.getElementById("specificemail_ta").style.display = "none";
+			}
+
+			function generateReport() {
+
+				if (int_array_for_chosen_report_type[0] == 1 && int_array_for_chosen_report_type[1] == 0 && int_array_for_chosen_report_type[2] == 0 && int_array_for_chosen_report_type[3] == 0) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+	
+				} else if (int_array_for_chosen_report_type[0] == 0 && int_array_for_chosen_report_type[1] == 1 && int_array_for_chosen_report_type[2] == 0 && int_array_for_chosen_report_type[3] == 0) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+
+				} else if (int_array_for_chosen_report_type[0] == 0 && int_array_for_chosen_report_type[1] == 0 && int_array_for_chosen_report_type[2] == 1 && int_array_for_chosen_report_type[3] == 0) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+
+				} else if (int_array_for_chosen_report_type[0] == 0 && int_array_for_chosen_report_type[1] == 0 && int_array_for_chosen_report_type[2] == 0 && int_array_for_chosen_report_type[3] == 1) {
+					document.getElementById("NoReportChosenOnRun").style.display = "none";
+					document.getElementById("RunButtonClicked").style.display = "inline-block";
+
+
+				} else {
+					document.getElementById("NoReportChosenOnRun").style.display = "inline-block";
+					document.getElementById("RunButtonClicked").style.display = "none";
+
+				}
+			}
+		</script>
+    <p></p>
+    <div>
+      <button onclick="generateReport()">
+				Run Report
+			</button>
+    </div>
+    <p></p>
+    <div style="display: none;"  id="RunButtonClicked">
+		
+		<div ng-controller="myHomeController">	
+			{{running_test_message}}
+		</div>
+		
+		<div ng-controller="myHomeController">	
+	   {{client_value}}
+		</div>
+		
+		<div ng-controller="myHomeController">
+		  {{email_campaign_value}}
+		</div>
+		
+		<div ng-controller="myHomeController">
+		{{specific_email_value}}
+	 </div>
+	 
+		<div ng-controller="AppCtrl">
+      {{license.expirationdate}}
+  </div>
+
+  </div>
+	
+    <p></p>
+    <div style="display: none; color: red" ng-controller="myHomeController" id="NoReportChosenOnRun">
+			{{ran_no_report_selected}}
+		</div>
+    <p></p>
+    <div>
+			Having report errors? Please contact the software maintenance team for this site       <a style="color:#3399FF" href="mailto:mscholzjr@gmail.com?subject=Miles Email Miner Errors">here</a>
+    </div>
+    <p></p>
+  </body>
+
+</html>
