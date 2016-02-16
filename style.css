@@ -1,31 +1,9 @@
-/* Styles go here */
-/* Styles go here */
-
-/* CSS by: Michael Scholz */
-#header{
-  font-family: 'Open Sans', sans-serif;
-  padding:10px;
-  margin-top:10px;
-  border-bottom: solid #3399FF;
-  margin-bottom:25px;
-}
-.milesLogo{
-  padding:25px 10px 5px 10px;
-}
-.tagline{
-  font-size:14px;
-  font-weight: 300;
-  margin:0px;
-}
-
-
 h1 {
 	color: #3399FF;
 }
 h2 {
 	color: #3399FF;
 }
-
 
 body {
 	background-color: white;
@@ -48,6 +26,18 @@ label {
 	padding-bottom: 10px;
 	padding-top: 10px;
 	min-width: 200px;
-	text-align:center;
+	text-align:left;
 	color: black;
+}
+
+form {  
+    height:100%; 
+    width:100%; 
+    margin:0;
+}
+
+html, body{
+   height:100%; 
+    width:100%; 
+    margin:0;	
 }
