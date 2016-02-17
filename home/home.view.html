@@ -1,0 +1,13 @@
+
+<div><h5 align="right">Hi, {{vm.user.firstName}}!</h5></div>
+
+<h3>All registered users:</h3>
+<ul>
+  <ul style="color:white">
+  <li ng-repeat="user in vm.allUsers">
+    {{user.username}} ({{user.firstName}} {{user.lastName}}) - <a href="#" ng-click="vm.deleteUser(user.id)">Delete</a>
+  </li>
+  </ul>
+</ul>
+<p>&nbsp;</p>
+
