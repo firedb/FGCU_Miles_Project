@@ -30,11 +30,11 @@
 </style>
 
 
-  <H5 align="center">Miles 2016.</H5>
-<ul>
+  <H5 align="center" ng-controller="FooterController">Miles {{current_year}}.</H5>
+<ul ng-controller="FooterController">
   <ul style="float:right;list-style-type:none;">
     <li><a href="#/contact">Contact</a></li>
     <li><a href="http://www.milespartnership.com/">Miles Marketing Destinations</a></li>
-    <li><a href="#/login">Logout</a></li>
+    <li><a class="link ng-scope" href="#/login" ng-click="logOutAction()">Logout</a></li>
   </ul>
 </ul>

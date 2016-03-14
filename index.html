@@ -4,12 +4,48 @@
 <head>
   <meta charset="utf-8" />
   <title>Miles Data Analysis</title>
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css" />
-   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="app-dev-sources/bootstrap_3_1_1.css" />
+  <link rel="stylesheet" href="app-dev-sources/style.css" />
+  <link rel="stylesheet" href="app-dev-sources/loading.css" />
+
+  <script src="app-dev-sources/angular_1_4_8.js"></script>
+  <script src="app-dev-sources/jquery_2_0_3.js"></script>
+  <script src="app-dev-sources/angular-route_1_3_5.js"></script>
+  <script src="app-dev-sources/angular-cookies_1_4_0.js"></script>
+  <script src="app-dev-sources/jspm_0_16_11.js"></script>
+  <script src="app-dev-sources/assets-cache_t-114.js"></script>
+  <script type="text/javascript" src="app-dev-sources/gstatic_charts_loader.js"></script>
+  <script type="text/javascript" src="app-dev-sources/underscore_1_8_3.js"></script>
+
+  <script src="app-dev-sources/app.js"></script>
+  
+  <script src="app-services/authentication.service.js"></script>
+  <script src="app-services/flash.service.js"></script>
+  <!-- Fake user service for demo that uses local storage -->
+  <script src="app-services/user.service.local-storage.js"></script>
+  <script src="app-dev-sources/angular-animate_1_4_4.js"></script>
+  <script src="app-dev-sources/angular-messages_1_4_9.js"></script>
+  <script src="app-dev-sources/angular-aria_1_4_4.js"></script>
+  <script src="app-dev-sources/angular-material_0_11_1.js"></script>
+  <script src="home/home.controller.js"></script>
+  <script src="login/login.controller.js"></script>
+  <script src="register/register.controller.js"></script>
+  <script src="about/about.controller.js"></script>
+  <script src="contact/contact.controller.js"></script>
+  <script src="create-report/create_report.controller.js"></script>
+  <script src="device-usage-report/device_usage.controller.js"></script>
+  <script src="link-performance-report/link_performance.controller.js"></script>
+  <script src="list-effectiveness-report/list_effectiveness.controller.js"></script>
+  <script src="opens-report/opens.controller.js"></script>
+  <script src="header/header.controller.js"></script>
+  <script src="footer/footer.controller.js"></script>
+
+
+  <link data-require="angular-material@0.11.1" data-semver="0.11.1" rel="stylesheet" href="app-dev-sources/angular-material_0_11_1.css"/>
 </head>
 
 <body>
-  <div ng-include="'milesheader.html'"></div>
+  <div ng-include="'header/header.view.html'"></div>
 
   <div ng-style="{'height':'50px', 'margin-top':'10px', 'border':'1px white', 'background-color':'#3399FF'}"></div>
   
@@ -24,37 +60,7 @@
     <div ng-style="{'height':'50px', 'margin-top':'10px', 'border':'1px white', 'background-color':'#3399FF'}"></div>
   </div>
  
-  <script src="//code.angularjs.org/1.4.8/angular.js"></script>
-  <script src="//code.jquery.com/jquery-2.0.3.js"></script>
-  <script src="//code.angularjs.org/1.3.5/angular-route.js"></script>
-  <script src="//code.angularjs.org/1.4.0/angular-cookies.js"></script>
-  <script src="https://jspm.io/system@0.16.js"></script>
-  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js"></script>
-  <!-- Google Chart Plugin -->
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="app.js"></script>
-  <script src="app-services/authentication.service.js"></script>
-  <script src="app-services/flash.service.js"></script>
-  <!-- Fake user service for demo that uses local storage -->
-  <script src="app-services/user.service.local-storage.js"></script>
-  <!-- Real user service that uses an api. Express JWT example at:
-  https://github.com/cornflourblue/mean-stack-registration-login-example
-  <script src="app-services/user.service.js"></script>-->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-messages/1.4.9/angular-messages.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-aria.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/0.11.1/angular-material.js"></script>
-  <script src="home/home.controller.js"></script>
-  <script src="login/login.controller.js"></script>
-  <script src="register/register.controller.js"></script>
-  <script src="report/report.controller.js"></script>
-  <script src="about/about.controller.js"></script>
-  <script src="contact/contact.controller.js"></script>
-
-  <link data-require="angular-material@0.11.1" data-semver="0.11.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/0.11.1/angular-material.css" />
-
-<div ng-include="'milesfooter.html'"></div>
+<div ng-include="'footer/footer.view.html'"></div>
 
 </body>
-
 </html>

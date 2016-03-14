@@ -1,6 +1,4 @@
- <div>
-  	<img ng-src="{{ Miles_Logo }}" alt="Miles Marketing Destinations" />  	
-    <form name="ReportForm">
+    <form name="CreateReportForm">
       
       <h3 id="UpdateReportInstruction" style="">{{Chosen_Report_Message}}</h3>
 
@@ -20,8 +18,7 @@
 			<!--What ng-model does is behind the scenes itâ€™s going to add a property up in the memory called â€œclient_modelâ€� into whatâ€™s called â€œthe scopeâ€�.-->
 			<label style=" width: 100px; height: 20px;" id="clientlabelid" name="clientid">Miles Client: </label>
 			<select class="input-block-level" ng-model="client_list" id="client_list_id">
-				<option value="None">None</option>
-				<option ng-repeat="client in client_names track by $index">{{client.client_name}}</option>
+				<option ng-repeat="client in client_campaign_mappings track by $index">{{client.Client_Name}}</option>
 				<option value="">Not Listed</option>
 			</select>
 			<input class="input-block-level ng-valid ng-dirty" ng-model="new_client" ng-show="!client_list" type="text" placeholder="Type in Client" id="new_client_ta">
@@ -30,8 +27,7 @@
       <div>
          <label style=" width: 100px; height: 20px;" id="emailcampaignid" name="emailcampaignid">Email Campaign: </label>
 	     <select class="input-block-level" ng-model="campaign_list" id="campaign_list_id">
-	          <option value="None">None</option>
-	          <option ng-repeat="campaign in client_names_and_campaigns track by $index">{{campaign.Data_Source_Nm}}</option>
+	          <option ng-repeat="campaign in campaign_choices">{{campaign}}</option>
 	          <option value="">Not Listed</option>
 	     </select>
          <input class="input-block-level ng-valid ng-dirty" ng-model="new_campaign" ng-show="!campaign_list" type="text" placeholder="Type in Campaign" id="new_campaign_ta">
@@ -40,9 +36,8 @@
        <div>
          <label style=" width: 100px; height: 20px;" id="specificemailid" name="specificemailid">Specific Email: </label>     
          <select class="input-block-level" ng-model="email_list" id="email_list_id">
-           <option value="None">None</option>
-           <option ng-repeat="email in client_emails track by $index">{{email.Mailing_Nm}}</option>
-           <option value="">Not Listed</option>
+           <option ng-repeat="email in email_choices">{{email}}</option>
+          <option value="">Not Listed</option>
          </select>
 	     <input class="input-block-level ng-valid ng-dirty" ng-model="new_email" ng-show="!email_list" type="text" placeholder="Type in Email" id="new_email_ta">      
       </div>
@@ -58,45 +53,38 @@
         </select>
       </div>
 
-      <div id="dp1and2_div" style='display: none;'>
-        <md-datepicker required name="dateField" ng-model="modified_start_date" md-placeholder="Enter date" ng-change="$parent.modified_start_date = modified_start_date.toISOString()">
-        </md-datepicker>
-        <md-datepicker required name="dateField" ng-model="modified_end_date" md-placeholder="Enter date" ng-change="$parent.modified_end_date = modified_end_date.toISOString()">
-        </md-datepicker>
-        <div ng-messages="ReportForm.dateField.$error" style="color:red" role="alert">
-          <ng-message when="required" translate>The starting and ending dates are required!</ng-message>
-        </div>
-      </div>
-
+      <div id="from_to_div" style='display: none;'>
+        <label style=" width: 200px;" id="fromtoid" name="fromtoid">From To: </label>
+      </div>  
+         
       <div id="single_day_div" style='display: none;'>
         <label style=" width: 200px;" id="singledayid" name="singledayid">Single Day: </label>
-        <md-datepicker required name="dateField" ng-model="modified_start_date" md-placeholder="Enter date" ng-change="$parent.modified_start_date = modified_start_date.toISOString()">
-        </md-datepicker>
-        <div ng-messages="ReportForm.dateField.$error" style="color:red" role="alert">
-          <ng-message when="required" translate>The starting date is required!</ng-message>
-        </div>
       </div>
       <div id="one_week_div" style='display: none;'>
         <label style=" width: 200px;" id="oneweekid" name="oneweekid">One Week Beginning On: </label>
-        <md-datepicker required name="dateField" ng-model="modified_start_date" md-placeholder="Enter date" ng-change="$parent.modified_start_date = modified_start_date.toISOString()">
-        </md-datepicker>
-        <div ng-messages="ReportForm.dateField.$error" style="color:red" role="alert">
-          <ng-message when="required" translate>The starting date is required!</ng-message>
-        </div>
       </div>
 
       <div id="one_month_div" style='display: none;'>
         <label style=" width: 200px;" id="onemonthid" name="onemonthid">30 Days Beginning On: </label>
-        <md-datepicker required name="dateField" ng-model="modified_start_date" md-placeholder="Enter date" ng-change="$parent.modified_start_date = modified_start_date.toISOString()">
-        </md-datepicker>
-        <div ng-messages="ReportForm.dateField.$error" style="color:red" role="alert">
-          <ng-message when="required" translate>The starting date is required!</ng-message>
-        </div>
       </div>
-		
-	<div id="Device_usage_chart" style="display:none; width:100%;">
-		<div id="chart_div"></div>
-	</div>
+				
+		<div id="startfield_id" style='display: none;'>
+        <md-datepicker required name="startdateField" ng-model="modified_start_date" md-placeholder="Enter date">
+        </md-datepicker>          
+          <div ng-messages="CreateReportForm.startdateField.$error" style="color:red" role="alert">
+          <ng-message when="required" translate>The starting date is required!</ng-message>
+          </div>
+        </div>
+        
+        <div id="endfield_id" style='display: none;'>
+        <md-datepicker required name="enddateField" ng-model="modified_end_date" md-placeholder="Enter date">
+        </md-datepicker>       
+        <div ng-messages="CreateReportForm.enddateField.$error" style="color:red" role="alert">
+          <ng-message when="required" translate>The starting and ending dates are required!</ng-message>
+        </div>
+        </div>
+
+
       <div>
         <button ng-click="generateReport(selected_report, selected_range, client_list, new_client, campaign_list, new_campaign, email_list, new_email, modified_start_date, modified_end_date)">
           Run Report
@@ -106,7 +94,9 @@
       <div style="display: none;" id="RunButtonClicked">
         {{running_test_message}}
       </div>
-
+		<!-- <div style="width:100%; height:500px" id="chart_div">
+			<h2>Chart here</h2>
+		</div> -->
       <div>
         {{error}}
       </div>
@@ -120,4 +110,3 @@
       </div>
 
     </form>
-  </div>

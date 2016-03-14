@@ -1,0 +1,38 @@
+
+<div>
+				<div>
+				 <h5>Report Type: {{report_type}}</h5>
+				 </div>
+				  	<div>
+				 <h5>Selected Email: {{email_value}}</h5>
+				 </div>
+				 	<div>
+				 <h5>Range Type: {{range_type}} {{readable_start_date}} - {{readable_end_date}}</h5>
+				 </div>
+		    	
+		    	<div id="load" style="display:inline-block;">
+					  <div>G</div>
+					  <div>N</div>
+					  <div>I</div>
+					  <div>D</div>
+					  <div>A</div>
+					  <div>O</div>
+					  <div>L</div>
+				</div>
+		    
+		    	<div>
+		    	  <h5>Isolate a Particular Link: </h5>
+			     <select class="input-block-level" ng-model="link_url_list" id="url_list_id"  style="display:inline-block; width: 800px;">     
+					  <option value="All">All</option>
+			          <option ng-repeat="link in allUniqueLinkData track by $index" style="width: 800px;">{{link}}</option>
+			     </select>
+			     </div>
+	  			
+	  <body>
+		     <div id="Link_performance_chart" style="display:none; width:100%;">
+				<button id="change">Change the date format</button>
+				<div id="chart_div"></div>
+			</div>
+    </body>
+
+</div>
