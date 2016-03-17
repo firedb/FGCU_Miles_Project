@@ -46,6 +46,9 @@
 	        	  } else if (newValue == "Device Usage") {
 	        		  $scope.Chosen_Report_Message = "Please select the parameters for the " + newValue + " Report";
 	        		  limitParameters();
+	        	  } else if (newValue =="List Effectiveness"){
+	        	  	$scope.Chosen_Report_Message = "Please select the parameters for the " + newValue + " Report";
+	        	  	showListEffectivenessParameteres();
 	        	  } else {
 	        		  $scope.Chosen_Report_Message = "Please select the parameters for the " + newValue + " Report";
 	        		  showAllParameters();
@@ -161,7 +164,18 @@
         	  document.getElementById("new_email_ta").style.display = "none";
         	  
           };  //ends function
-
+		
+			var showListEffectivenessParameteres = function(){
+				document.getElementById("clientlabelid").style.display = "inline-block";
+        	  document.getElementById("client_list_id").style.display = "inline-block";
+        	  document.getElementById("new_client_ta").style.display = "inline-block";
+        	  document.getElementById("emailcampaignid").style.display = "inline-block";
+        	  document.getElementById("campaign_list_id").style.display = "inline-block";
+        	  document.getElementById("new_campaign_ta").style.display = "inline-block";
+        	  document.getElementById("specificemailid").style.display = "none";
+        	  document.getElementById("email_list_id").style.display = "none";
+        	  document.getElementById("new_email_ta").style.display = "none";
+			};
           
 $scope.generateReport = function(selected_report, selected_range, client_value, new_client_value, 
         		  						   campaign_value, new_campaign_value, email_value, new_email_value, modified_start_date, 
@@ -324,10 +338,23 @@ $scope.generateReport = function(selected_report, selected_range, client_value, 
 	                	  else{
 	                		  var endDate =""; 
 	                	      }
-	  
-	                	  //todo: pass parameters to listEffectiveness.php 
+					//pass js variables for chart view
+					localStorage.setItem("report_type", selected_report);
+					localStorage.setItem("range_type", selected_range);
+					localStorage.setItem("readable_start_date", startDate);
+					localStorage.setItem("readable_end_date", endDate);
 
-	       	  
+					localStorage.setItem("start_date", start_date);
+					localStorage.setItem("end_date", end_date);
+					
+                   	if(campaign_value){
+                   		 	localStorage.setItem("campaign_value", campaign_value);
+                   	}
+                	if(new_campaign_value){
+                		 	localStorage.setItem("new_campaign_value", new_campaign_value);
+                	} 
+					$location.path('/list-effectiveness-report');	                	  
+  
 	                	  	}  // ends else
 	                  	break;
 
